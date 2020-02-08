@@ -1,31 +1,90 @@
 import random
+import spacy
+
+nlp = spacy.load('en_core_web_sm')
 
 nouns = ("apple", "boy", "donkey", "tricycle", "teacher")
 verbs = ("ate", "threw", "rode", "washed", "followed")
 adv = ("flawlessly", "gracefully", "erratically", "attentively", "amazingly")
-adj = ("shiny", "brave", "lowly", "giant", "pretty")
+adj = ("new", "brave", "lowly", "giant", "pretty")
 
-chosen_noun = nouns[random.randrange(0,5)]
-chosen_verbs = verbs[random.randrange(0,5)]
-chosen_adv = adv[random.randrange(0,5)]
-chosen_adj = adj[random.randrange(0,5)]
+main_character = (nouns[1], nouns[2], nouns[4])
 
-# If apple is rolled
-if chosen_noun is nouns[0]:
-    noun_choices = (nouns[1], nouns[2], nouns[4])
-    verb_choices = (verbs[0], verbs[1], verbs[3])
-    adv_choices = (adv[2], adv[4])
-    adj_choices = (adj[0], adj[3], adj[4])
 
-    print('The ' + noun_choices[random.randrange(0,3)] + ' ' + adv_choices[random.randrange(0,2)] + ' ' + verb_choices[random.randrange(0,3)] + ' the ' + adj_choices[random.randrange(0,2)] + ' apple.')
-
-# If boy or teacher is rolled
-if chosen_noun is nouns[1] or nouns[4]:
-    noun_choices = (nouns[1], nouns[2], nouns[3], nouns[4])
-    verb_choices = (verbs[2], verbs[4])
-    adv_choices = (adv[0], adv[1], adv[3])
-    adj_choices = (adj[1], adj[2], adj[4])
-
+def generate_sentence(chosen_noun, chosen_verbs, chosen_adv, chosen_adj):
     # If boy is rolled
-    if noun_choices[random.randrange(0,4)] is nouns[1]:
-        print('The ' + nouns[1] + ' ' + adv_choices[random.randrange(0,3)] + ' ' + verb_choices[random.randrange(0,2)] + ' the ' + adj_choices[random.randrange(0,3)] + ' ' + noun_choices[random.randrange(0,3)])
+    if chosen_noun is nouns[1]:
+        noun_choices = (nouns[0], nouns[2], nouns[3], nouns[4])
+
+        # If boy ate or threw
+        if chosen_verbs is verbs[0] or chosen_verbs is verbs[1]:
+            return ('The ' + chosen_noun + ' ' + chosen_adv + ' ' + chosen_verbs + ' the ' + chosen_adj + ' ' +
+                    noun_choices[0] + '.')
+
+        # If boy rode or washed
+        elif chosen_verbs is verbs[2] or chosen_verbs is verbs[3]:
+            return ('The ' + chosen_noun + ' ' + chosen_adv + ' ' + chosen_verbs + ' the ' + chosen_adj + ' ' +
+                    noun_choices[random.randrange(1, 3)] + '.')
+
+        # If boy followed
+        elif chosen_verbs is verbs[4]:
+            restricted_choices = (noun_choices[1], noun_choices[3])
+            return ('The ' + chosen_noun + ' ' + chosen_adv + ' ' + chosen_verbs + ' the ' + chosen_adj + ' ' +
+                    restricted_choices[random.randrange(0, 2)] + '.')
+
+    # If donkey is rolled
+    elif chosen_noun is nouns[2]:
+        noun_choices = (nouns[0], nouns[1], nouns[4])
+
+        # If donkey ate or threw
+        if chosen_verbs is verbs[0] or chosen_verbs is verbs[1]:
+            return ('The ' + chosen_noun + ' ' + chosen_adv + ' ' + chosen_verbs + ' the ' + chosen_adj + ' ' +
+                    noun_choices[0] + '.')
+
+        # If donkey followed
+        elif chosen_verbs is verbs[4]:
+            return ('The ' + chosen_noun + ' ' + chosen_adv + ' ' + chosen_verbs + ' the ' + chosen_adj + ' ' +
+                    noun_choices[random.randrange(1, 3)] + '.')
+
+        elif chosen_verbs is verbs[2]:
+            doc = nlp(chosen_verbs)
+            for token in doc:
+                root_verb = token.lemma_
+            return 'Only silly donkeys try to ' + root_verb + ' things.'
+
+        elif chosen_verbs is verbs[3]:
+            doc = nlp(chosen_verbs)
+            for token in doc:
+                root_verb = token.lemma_
+            return 'It\'s hard for a donkey to ' + root_verb + ' anything without hands!'
+
+
+    # If teacher is rolled
+    elif chosen_noun is nouns[4]:
+        noun_choices = (nouns[0], nouns[1], nouns[2], nouns[3])
+
+        # If teacher ate or threw
+        if chosen_verbs is verbs[0] or chosen_verbs is verbs[1]:
+            return ('The ' + chosen_noun + ' ' + chosen_adv + ' ' + chosen_verbs + ' the ' + chosen_adj + ' ' +
+                    noun_choices[0] + '.')
+
+        # If teacher rode
+        elif chosen_verbs is verbs[2]:
+            return ('The ' + chosen_noun + ' ' + chosen_adv + ' ' + chosen_verbs + ' the ' + chosen_adj + ' ' +
+                    noun_choices[2] + '.')
+
+        # If teacher washed
+        elif chosen_verbs is verbs[3]:
+            return ('The ' + chosen_noun + ' ' + chosen_adv + ' ' + chosen_verbs + ' the ' + chosen_adj + ' ' +
+                    noun_choices[random.randrange(2, 4)] + '.')
+
+        # If teacher followed
+        else:
+            return ('The ' + chosen_noun + ' ' + chosen_adv + ' ' + chosen_verbs + ' the ' + chosen_adj + ' ' +
+                    noun_choices[random.randrange(1, 3)] + '.')
+
+
+for _ in range(20):
+    print(generate_sentence(main_character[random.randrange(0, 3)], verbs[random.randrange(0, 5)],
+                            adv[random.randrange(0, 5)], adj[random.randrange(0, 5)]
+                            ))
