@@ -46,18 +46,19 @@ def generate_sentence(chosen_noun, chosen_verbs, chosen_adv, chosen_adj):
             return ('The ' + chosen_noun + ' ' + chosen_adv + ' ' + chosen_verbs + ' the ' + chosen_adj + ' ' +
                     noun_choices[random.randrange(1, 3)] + '.')
 
+        # If donkey rode
         elif chosen_verbs is verbs[2]:
             doc = nlp(chosen_verbs)
             for token in doc:
                 root_verb = token.lemma_
             return 'Only silly donkeys try to ' + root_verb + ' things.'
 
+        # If donkey washed
         elif chosen_verbs is verbs[3]:
             doc = nlp(chosen_verbs)
             for token in doc:
                 root_verb = token.lemma_
             return 'It\'s hard for a donkey to ' + root_verb + ' anything without hands!'
-
 
     # If teacher is rolled
     elif chosen_noun is nouns[4]:
@@ -84,6 +85,7 @@ def generate_sentence(chosen_noun, chosen_verbs, chosen_adv, chosen_adj):
                     noun_choices[random.randrange(1, 3)] + '.')
 
 
+# Generate 20 sentences
 for _ in range(20):
     print(generate_sentence(main_character[random.randrange(0, 3)], verbs[random.randrange(0, 5)],
                             adv[random.randrange(0, 5)], adj[random.randrange(0, 5)]
